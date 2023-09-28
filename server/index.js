@@ -9,8 +9,8 @@ const db = require('./models');
 
 // Routers
 const postRouter = require('./routes/Posts');
-const commentRouter = require('./routes/Comments');
 app.use('/api/v1/post', postRouter);
+const commentRouter = require('./routes/Comments');
 app.use('/api/v1/comments', commentRouter);
 
 db.sequelize.sync().then(() => {
