@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Comments } = require("../models");
+const validationToken = require("../middlewares/AuthMiddleware");
 
 router.get("/:postId", async (req, res) => {
   const postId = req.params.postId;
@@ -8,7 +9,7 @@ router.get("/:postId", async (req, res) => {
   res.json(comments);
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", validationToken, async (req, res) => {
   const comment = req.body;
   const newComment = await Comments.create(comment);
   res.json(newComment);

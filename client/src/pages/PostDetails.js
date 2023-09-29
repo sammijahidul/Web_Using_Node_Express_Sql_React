@@ -20,11 +20,20 @@ function PostDetails() {
   const addComment = () => {
     axios.post("http://localhost:3001/api/v1/comments/create", {
         commentBody: newComment, 
-        PostId: id})
+        PostId: id},
+        {
+          headers: {
+            accessToken: sessionStorage.getItem("accessToken"),
+          }
+        })
       .then((response) => {
-        const commentToAdd = {commentBody: newComment}
-        setComments([...comments, commentToAdd]);
-        setNewComment("");
+        if(response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const commentToAdd = {commentBody: newComment}
+          setComments([...comments, commentToAdd]);
+          setNewComment("");
+        }
       });
   };
 
