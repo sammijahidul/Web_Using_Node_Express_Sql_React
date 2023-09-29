@@ -8,7 +8,11 @@ function LoginPage() {
   const login = () => {
     const data = {username: username, password: password};
     axios.post("http://localhost:3001/api/v1/user/login", data).then((response) => {
-        console.log(response.data);
+        if(response.data.error) {
+          alert(response.data.error);
+        } else {
+          sessionStorage.setItem("accessToken", response.data);
+        }       
     }) 
   };  
   return (
