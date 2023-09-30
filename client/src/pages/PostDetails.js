@@ -23,7 +23,7 @@ function PostDetails() {
         PostId: id},
         {
           headers: {
-            accessToken: sessionStorage.getItem("accessToken"),
+            accessToken: localStorage.getItem("accessToken"),
           }
         })
       .then((response) => {
