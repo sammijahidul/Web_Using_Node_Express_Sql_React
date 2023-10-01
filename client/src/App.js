@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [authSate, setAuthState] = useState({
+  const [authState, setAuthState] = useState({
     username: "",
     id: 0,
     status: false,
@@ -23,7 +23,7 @@ function App() {
       }
     }).then((response) => {
       if (response.data.error) {
-        setAuthState({...authSate, status: false});
+        setAuthState({...authState, status: false});
       } else {
         setAuthState({
           username: response.data.username,
@@ -41,12 +41,12 @@ function App() {
 
   return (
     <div className="App">
-      <AuthContext.Provider value={{authSate, setAuthState}}>
+      <AuthContext.Provider value={{authState, setAuthState}}>
         <Router>
           <div className='navbar'>
             <Link to="/">Home Page</Link>
             <Link to="/createpost">Create A Post</Link>
-            {!authSate.status ? (
+            {!authState.status ? (
               <>
                 <Link to="/login">Login</Link>
                 <Link to="/registrations">Registration</Link>
@@ -54,7 +54,7 @@ function App() {
             ) : (
               <button onClick={logout}>Logout</button>
             )}
-            {authSate.username}
+            {authState.username}
           </div>
           <Routes>
             <Route path='/' exact Component={HomePage}/>

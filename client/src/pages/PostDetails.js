@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../helpers/AuthContext';
 
 function PostDetails() {
   let { id } = useParams();
   const [postObject, setPostObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const {authState} = useContext(AuthContext);
 
   useEffect(() => {
     axios.get(`http://localhost:3001/api/v1/post/byid/${id}`).then((response) => {
@@ -40,6 +42,17 @@ function PostDetails() {
       });
   };
 
+  const deleteComment = (id) => {
+    axios.delete(`http://localhost:3001/api/v1/comments/${id}`, {
+      headers: {
+        accessToken: localStorage.getItem("accessToken")}
+    }).then(() => {
+      setComments(comments.filter((val) => {
+        return val.id != id;
+      }))
+    })
+  }
+
   return (
     <div className='postPage'>
       <div className='leftSide'>
@@ -66,6 +79,9 @@ function PostDetails() {
               <div key={key} className='comment'>
                 {comment.commentBody}
                 <label>Username: {comment.username}</label>
+                {authState.username === comment.username && 
+                  <button onClick={() => {deleteComment(comment.id)}}>Delete</button>
+                }
               </div>
             );
           })}
