@@ -23,7 +23,12 @@ function App() {
         setAuthState(true);
       }
     });       
-  }, [])
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("accessToken")
+    setAuthState(false);
+  };
 
   return (
     <div className="App">
@@ -32,11 +37,13 @@ function App() {
           <div className='navbar'>
             <Link to="/">Home Page</Link>
             <Link to="/createpost">Create A Post</Link>
-            {!authSate && (
+            {!authSate ? (
               <>
                 <Link to="/login">Login</Link>
                 <Link to="/registrations">Registration</Link>
               </>
+            ) : (
+              <button onClick={logout}>Logout</button>
             )}
           </div>
           <Routes>
