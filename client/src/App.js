@@ -10,7 +10,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [authSate, setAuthState] = useState(false);
+  const [authSate, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
+
   useEffect(() => {
     axios.get("http://localhost:3001/api/v1/user/auth", {
       headers: {
@@ -18,16 +23,20 @@ function App() {
       }
     }).then((response) => {
       if (response.data.error) {
-        setAuthState(false);
+        setAuthState({...authSate, status: false});
       } else {
-        setAuthState(true);
+        setAuthState({
+          username: response.data.username,
+          id: response.data.id,
+          status: true,
+        });
       }
     });       
   }, []);
 
   const logout = () => {
     localStorage.removeItem("accessToken")
-    setAuthState(false);
+    setAuthState({username: "", id: 0, status: false});
   };
 
   return (
@@ -37,7 +46,7 @@ function App() {
           <div className='navbar'>
             <Link to="/">Home Page</Link>
             <Link to="/createpost">Create A Post</Link>
-            {!authSate ? (
+            {!authSate.status ? (
               <>
                 <Link to="/login">Login</Link>
                 <Link to="/registrations">Registration</Link>
@@ -45,6 +54,7 @@ function App() {
             ) : (
               <button onClick={logout}>Logout</button>
             )}
+            {authSate.username}
           </div>
           <Routes>
             <Route path='/' exact Component={HomePage}/>
