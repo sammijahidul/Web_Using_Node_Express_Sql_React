@@ -13,12 +13,21 @@ function HomePage() {
       });  
     }, []);
 
-    const postLike = (PostId) => {
+    const postLike = (postId) => {
       axios.post("http://localhost:3001/api/v1/likes/given", 
-      { PostId: PostId }, 
+      { PostId: postId }, 
       { headers: {accessToken: localStorage.getItem("accessToken") }}
       ).then((response) => {
         alert(response.data);
+        setListOfPosts(
+          listOfPosts.map((post) => {
+            if (post.id === postId) {
+              return { ...post, Likes: [...post.Likes, 0]}
+            } else {
+              return post;
+            }
+          })
+        )
       })
     };
   return (
@@ -45,6 +54,7 @@ function HomePage() {
                 {" "}
                 Like
               </button>
+              <label>{value.Likes.length}</label>
             </div>
           </div>
         );
