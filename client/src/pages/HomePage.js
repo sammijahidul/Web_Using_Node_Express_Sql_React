@@ -17,12 +17,17 @@ function HomePage() {
       axios.post("http://localhost:3001/api/v1/likes/given", 
       { PostId: postId }, 
       { headers: {accessToken: localStorage.getItem("accessToken") }}
-      ).then((response) => {
-        alert(response.data);
+      ).then((response) => {       
         setListOfPosts(
           listOfPosts.map((post) => {
             if (post.id === postId) {
-              return { ...post, Likes: [...post.Likes, 0]}
+              if (response.data.liked) {
+                return { ...post, Likes: [...post.Likes, 0]}
+              } else {
+                const likesArray = post.Likes;
+                likesArray.pop();
+                return { ...post, Likes: likesArray};
+              }
             } else {
               return post;
             }
