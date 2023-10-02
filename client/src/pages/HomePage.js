@@ -44,7 +44,7 @@ function HomePage() {
         //unliked icon instantly changed 
         if (likedPost.includes(postId)) {
           setLikedPost(likedPost.filter((id) => {
-            return id != postId;
+            return id !== postId;
           })
         );
         //liked icon instantly changed

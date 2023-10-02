@@ -8,6 +8,7 @@ import RegistrationPage from './pages/RegistrationPage';
 import {AuthContext} from './helpers/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import PageNotFound from './pages/PageNotFound';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -65,6 +66,7 @@ function App() {
             <Route path='/post/:id' exact Component={PostDetails}/>
             <Route path='/login' exact Component={LoginPage}/>
             <Route path='/registrations' exact Component={RegistrationPage}/>
+            <Route path='*' exact Component={PageNotFound}/>
           </Routes>
         </Router>
       </AuthContext.Provider>      
