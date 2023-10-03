@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { AuthContext } from '../helpers/AuthContext';
 
 function HomePage() {
     const [listOfPosts, setListOfPosts] = useState([]);
     const [likedPost, setLikedPost] = useState([]);
+    const { authState } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
+      if(!authState.status) {
+        navigate('/login');
+      } else {
       axios.get("http://localhost:3001/api/v1/post/fetch", { 
         headers: {accessToken: localStorage.getItem("accessToken") }
       }).then((response) => {
@@ -18,7 +23,8 @@ function HomePage() {
           response.data.likedPosts.map((like) => {
             return like.PostId;
         }));
-      });  
+      }); 
+      } 
     }, []);
 
     const postLike = (postId) => {
