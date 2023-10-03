@@ -1,21 +1,25 @@
+import { useParams, useNavigate } from 'react-router-dom';
 import React, {useContext, useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+
 import axios from 'axios';
 import { AuthContext } from '../helpers/AuthContext';
 
 function PostDetails() {
-  let { id } = useParams();
+  let { id } = useParams(); 
   const [postObject, setPostObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const {authState} = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/v1/post/byid/${id}`).then((response) => {
+    axios.get(`http://localhost:3001/api/v1/post/byid/${id}`)
+      .then((response) => {
         setPostObject(response.data);
       });  
-    axios.get(`http://localhost:3001/api/v1/comments/${id}`).then((response) => {
-      setComments(response.data);
+    axios.get(`http://localhost:3001/api/v1/comments/${id}`)
+      .then((response) => {
+        setComments(response.data);
     });  
   }, []);
 
@@ -48,18 +52,44 @@ function PostDetails() {
         accessToken: localStorage.getItem("accessToken")}
     }).then(() => {
       setComments(comments.filter((val) => {
-        return val.id != id;
+        return val.id !== id;
       }))
     })
-  }
+  };
+
+  const deletePost = (id) => {
+    axios.delete(`http://localhost:3001/api/v1/post/${id}`, {
+      headers : {
+        accessToken: localStorage.getItem("accessToken")
+      },
+    })
+    .then((response) => {
+      navigate("/");
+    })
+    .catch((error) => {
+      console.error("Error while deleting posts")
+
+    });
+  };
 
   return (
     <div className='postPage'>
       <div className='leftSide'>
         <div className='post' id='individual'>
-          <div className='title'>{postObject.title}</div>
-          <div className='body'>{postObject.postText}</div>
-          <div className='footer'>{postObject.username}</div>
+          <div className='title'> {postObject.title} </div>
+          <div className='body'> {postObject.postText} </div>
+          <div className='footer'>
+            {postObject.username} 
+            {authState.username === postObject.username && (
+              <button 
+                onClick={() => {
+                  deletePost(postObject.id);
+              }}
+              >
+                Delete Post
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <div className='rightSide'>
@@ -69,18 +99,30 @@ function PostDetails() {
             placeholder='Comment...' 
             autoComplete='off'
             value={newComment}
-            onChange={(event) => {setNewComment(event.target.value)}}
+            onChange={(event) => {
+              setNewComment(event.target.value)
+            }}
           />
-          <button onClick={addComment}>Add Comment</button>
+          <button 
+            onClick={addComment}
+          >
+            Add Comment
+          </button>
         </div>
         <div className='listOfComments'>
           {comments.map((comment, key) => {
             return (
               <div key={key} className='comment'>
                 {comment.commentBody}
-                <label>Username: {comment.username}</label>
+                <label> Username: {comment.username}</label>
                 {authState.username === comment.username && 
-                  <button onClick={() => {deleteComment(comment.id)}}>Delete</button>
+                  <button 
+                    onClick={() => {
+                      deleteComment(comment.id)
+                    }}
+                  >
+                    Delete
+                  </button>
                 }
               </div>
             );
