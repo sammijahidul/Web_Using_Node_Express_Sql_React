@@ -9,6 +9,7 @@ import {AuthContext} from './helpers/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import PageNotFound from './pages/PageNotFound';
+import Profile from './pages/Profile';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -68,8 +69,9 @@ function App() {
             <Route path='/' exact Component={HomePage}/>
             <Route path='/createpost' exact Component={CreatePost}/>
             <Route path='/post/:id' exact Component={PostDetails}/>
-            <Route path='/login' exact Component={LoginPage}/>
             <Route path='/registrations' exact Component={RegistrationPage}/>
+            <Route path='/login' exact Component={LoginPage}/>
+            <Route path='/profile/:id' exact Component={Profile}/>
             <Route path='*' exact Component={PageNotFound}/>
           </Routes>
         </Router>
