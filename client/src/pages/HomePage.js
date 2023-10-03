@@ -12,7 +12,7 @@ function HomePage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-      if(!authState.status) {
+      if(!localStorage.getItem("accessToken")) {
         navigate('/login');
       } else {
       axios.get("http://localhost:3001/api/v1/post/fetch", { 
