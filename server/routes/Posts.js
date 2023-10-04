@@ -18,8 +18,9 @@ router.get("/byId/:id", async(req, res) => {
 router.get("/byuserId/:id", async(req, res) => {
   const id = req.params.id;
   const allPosts = await Posts.findAll({where : {
-    UserId: id
-  }});
+    UserId: id },
+    include: [Likes],
+  });
   res.json(allPosts);
 });
 
