@@ -21,29 +21,33 @@ function Profile() {
   }, []);
   return (
     <div className='profilePageContainer'>
-      {listOfPosts.map((value, key) => { 
-        return (
-          <div 
-            key={key} 
-            className='post' 
-          >
-            <div className='title'>{value.title}</div>
-            <div className='body' 
-              onClick={() => {
-                navigate(`/post/${value.id}`)
-              }}
-            >{value.postText}
-            </div>
-            <div className='footer'>
-              <div className='username'>{value.username}</div>
-              <div className='buttons'>
-                <label>{value.Likes.length}</label>
+      <div className='basicInfo'>
+        <h1> Username: {username} </h1>
+      </div>
+      <div className='listOfPosts'>
+        {listOfPosts.map((value, key) => { 
+          return (
+            <div 
+              key={key} 
+              className='post' 
+            >
+              <div className='title'>{value.title}</div>
+              <div className='body' 
+                onClick={() => {
+                  navigate(`/post/${value.id}`)
+                }}
+              >{value.postText}
               </div>
-            </div>
-          </div>  
-        );
-      })}
-      
+              <div className='footer'>
+                <div className='username'>{value.username}</div>
+                <div className='buttons'>
+                  <label>{value.Likes.length}</label>
+                </div>
+              </div>
+            </div>  
+          );
+        })}
+      </div>      
     </div>
   )
 }
