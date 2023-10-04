@@ -24,7 +24,7 @@ function RegistrationPage() {
   };
 
   return (
-    <div>
+    <div className='createPostPage'>
       <Formik 
         initialValues={initialValues} 
         onSubmit={onSubmit} 

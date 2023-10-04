@@ -76,15 +76,17 @@ function HomePage() {
             </div>
             <div className='footer'>
               <div className='username'>
-                <Link to={`/profile/${value.UserId}`}>{value.username}</Link>
+                <Link to={`/profile/${value.UserId}`}> {value.username} </Link>
               </div>
               <div className='buttons'>
-                <ThumbUpIcon onClick={() => {
-                  postLike(value.id)
+                <ThumbUpIcon 
+                  onClick={() => {
+                    postLike(value.id)
                   }}
-                  className={likedPost.includes(value.id) ? "unlikeBttn" : "likeBttn"}
+                  className={
+                    likedPost.includes(value.id) ? "unlikeBttn" : "likeBttn"
+                  }
                 />
-
                 <label>{value.Likes.length}</label>
               </div>
             </div>

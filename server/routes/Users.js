@@ -38,12 +38,10 @@ router.post('/login', async (req, res) => {
 
 router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
-
 });
 
 router.get("/profile/:id", async (req, res) => {
   const id = req.params.id;
-
   const profileinfo = await Users.findByPk(id, {attributes : {
     exclude: ["password"]
     },

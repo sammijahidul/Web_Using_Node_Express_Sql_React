@@ -150,7 +150,7 @@ span {
   justify-content: flex-end;
   align-items: center;
 }
-.navbar a {
+a {
   margin-left: 20px;
   text-decoration: none;
   color: white;
@@ -279,3 +279,4 @@ button {
 .loginContainer input {
   border: 2px solid dodgerblue;
 }
+
