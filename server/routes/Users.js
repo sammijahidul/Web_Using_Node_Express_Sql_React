@@ -5,24 +5,31 @@ const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const validateToken = require('../middlewares/AuthMiddleware');
 
+// User registration route api and controller
 router.post("/auth", async (req, res) => {
-  const { username, password} = req.body; 
+  try {
+    const { username, password} = req.body; 
    bcrypt.hash(password, 10).then((hash) => {
     Users.create({
         username: username,
         password: hash
-    })
+    });
     res.json('Success');
-  });
+  });   
+  } catch (error) {
+    res.json({error: "Error while registration"})
+  } 
 });
 
+// User login route api and controller
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await Users.findOne({ where: { username: username } });
-  if(!user) {
-    res.json({error: "User was not found"});
-  } else {
-    bcrypt.compare(password, user.password).then((match) => {
+  try {
+    const { username, password } = req.body;
+    const user = await Users.findOne({ where: { username: username } });
+    if(!user) {
+      res.json({error: "User was not found"});
+    } else {
+      bcrypt.compare(password, user.password).then((match) => {
         if(!match) {
             res.json({error: "Password didn't match"});
         } else {
@@ -32,26 +39,36 @@ router.post('/login', async (req, res) => {
             }, "ithastobesecreat");
           res.json({token: accessToken, username: username, id: user.id});  
         }
-    })
+      })
+  }    
+  } catch (error) {
+    res.json({error: "Error while login"});
   } 
 });
 
+// Authentication route for user
 router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });
 
+// Individual user info api route and controller
 router.get("/profile/:id", async (req, res) => {
-  const id = req.params.id;
-  const profileinfo = await Users.findByPk(id, {attributes : {
-    exclude: ["password"]
+  try {
+    const id = req.params.id;
+    const profileinfo = await Users.findByPk(id, {attributes : {
+      exclude: ["password"]
     },
   });
-  res.json(profileinfo);
+  res.json(profileinfo);    
+  } catch (error) {
+    res.json({error: "Error while getting user info"})
+  } 
 });
 
+// Password changed api route and controller
 router.patch('/change-password', validateToken, async (req, res) => {
   try {
-    const {oldPassword, newPassword} = req.body;
+    const { oldPassword, newPassword } = req.body;
     const user = await Users.findOne({ where: {username: req.user.username}});
 
     bcrypt.compare(oldPassword, user.password).then((match) => {
@@ -59,7 +76,7 @@ router.patch('/change-password', validateToken, async (req, res) => {
           res.json({error: "Wrong Password inserted"});
       } else {
         bcrypt.hash(newPassword, 10).then((hash) => {
-          Users.update({password: hash}, {where : {username: req.user.username}} )
+          Users.update({password: hash}, { where : {username: req.user.username }})
           res.json('Success');
         });
       }
@@ -67,7 +84,6 @@ router.patch('/change-password', validateToken, async (req, res) => {
   } catch (error) {
     res.json({error: "Error while updating password"});
   }
-
 });
 
 module.exports = router;

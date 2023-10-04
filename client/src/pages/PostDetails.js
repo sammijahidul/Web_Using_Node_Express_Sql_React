@@ -11,6 +11,7 @@ function PostDetails() {
   const [newComment, setNewComment] = useState("");
   const {authState} = useContext(AuthContext);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     axios.get(`http://localhost:3001/api/v1/post/byid/${id}`)
@@ -160,8 +161,10 @@ function PostDetails() {
           {comments.map((comment, key) => {
             return (
               <div key={key} className='comment'>
-                {comment.commentBody}
-                <label> Username: {comment.username}</label>
+                <div className='commentBody'>{comment.commentBody}</div>               
+                <label className='username'> 
+                  @{comment.username}                 
+                </label>
                 {authState.username === comment.username && 
                   <button 
                     onClick={() => {
