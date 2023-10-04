@@ -72,12 +72,59 @@ function PostDetails() {
     });
   };
 
+  const editPost = (option) => {
+    if (option === 'title') {
+      let newTitle = prompt('Enter new Title');
+      axios.patch("http://localhost:3001/api/v1/post/update-title", 
+        {
+          newTitle: newTitle,
+          id: id,
+        },
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        },
+      );
+      // for instantly update
+      setPostObject({...postObject, title: newTitle});
+
+    } else {
+      let newPostText = prompt("Enter body Text");
+      axios.patch("http://localhost:3001/api/v1/post/update-postBody", 
+        {
+          newPostText: newPostText,
+          id: id,
+        },
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }
+      );
+      // for instantly update
+      setPostObject({...postObject, postText: newPostText});
+
+    }
+  }
   return (
     <div className='postPage'>
       <div className='leftSide'>
         <div className='post' id='individual'>
-          <div className='title'> {postObject.title} </div>
-          <div className='body'> {postObject.postText} </div>
+          <div className='title' 
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost('title');
+              }
+            }}
+          > 
+            {postObject.title} 
+          </div>
+          <div className='body' 
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost('body');
+              }
+            }}
+          > 
+            {postObject.postText} 
+          </div>
           <div className='footer'>
             {postObject.username} 
             {authState.username === postObject.username && (
@@ -133,4 +180,4 @@ function PostDetails() {
   );
 }
 
-export default PostDetails
+export default PostDetails;

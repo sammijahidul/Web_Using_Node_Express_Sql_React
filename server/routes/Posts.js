@@ -32,6 +32,28 @@ router.post("/create", validationToken, async (req, res) => {
   res.json(post);
 });
 
+router.patch("/update-title", validationToken, async (req, res) => {
+  try {
+    const { newTitle, id } = req.body;
+    await Posts.update({title: newTitle}, {where: {id: id}});
+    res.json(newTitle);
+
+  } catch (error) {
+    res.json({error: "Error while updating post"})
+  }
+});
+
+router.patch("/update-postBody", validationToken, async (req, res) => {
+  try {
+    const { newPostText, id } = req.body;
+    await Posts.update({postText: newPostText}, {where: {id: id}});
+    res.json(newPostText);
+    
+  } catch (error) {
+    res.json({error: "Error while updating post"})
+  }
+});
+
 router.delete('/:postId', validationToken, async (req, res) => {
     const postId = req.params.postId;
     await Posts.destroy({
