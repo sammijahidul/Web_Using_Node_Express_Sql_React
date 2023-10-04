@@ -49,7 +49,28 @@ router.get("/profile/:id", async (req, res) => {
     },
   });
   res.json(profileinfo);
-})
+});
+
+router.patch('/change-password', validateToken, async (req, res) => {
+  try {
+    const {oldPassword, newPassword} = req.body;
+    const user = await Users.findOne({ where: {username: req.user.username}});
+
+    bcrypt.compare(oldPassword, user.password).then((match) => {
+      if(!match) {
+          res.json({error: "Wrong Password inserted"});
+      } else {
+        bcrypt.hash(newPassword, 10).then((hash) => {
+          Users.update({password: hash}, {where : {username: req.user.username}} )
+          res.json('Success');
+        });
+      }
+  })   
+  } catch (error) {
+    res.json({error: "Error while updating password"});
+  }
+
+});
 
 module.exports = router;
 
